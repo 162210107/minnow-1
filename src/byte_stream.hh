@@ -9,6 +9,7 @@ using namespace std;
 class Reader;
 class Writer;
 
+
 class ByteStream
 {
 public:
