@@ -1,6 +1,7 @@
 #pragma once
 
 #include "byte_stream.hh"
+#include <map>
 
 class Reassembler
 {
@@ -43,4 +44,7 @@ public:
 
 private:
   ByteStream output_;
+  map<uint64_t,char> byte_map_{};
+  bool _is_eof = false;
+  size_t _eof_index = 0;
 };

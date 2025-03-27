@@ -1,4 +1,5 @@
 #include "byte_stream.hh"
+#include <iostream>
 using namespace std;
 
 using namespace std;
@@ -17,7 +18,6 @@ void Writer::push( string data )
     bufed_ += data.size();
     q.push( std::move( data ) );
   }
-
   if(f.empty()&&!q.empty()) f=q.front();
 }
 
