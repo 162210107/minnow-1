@@ -11,6 +11,7 @@
 #include <span>
 #include <string>
 #include <tuple>
+#include <pthread.h>
 
 using namespace std;
 

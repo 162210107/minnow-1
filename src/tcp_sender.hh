@@ -42,4 +42,15 @@ private:
   ByteStream input_;
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+  bool isSent_ISN{};
+  bool isSent_FIN{};
+  uint64_t cur_RTO_ms{};
+  bool is_start_timer{};
+  TCPReceiverMessage received_msg{};
+  uint64_t abs_seqno{};
+  uint16_t primitive_window_size{};
+  std::deque<TCPSenderMessage> outstanding_collections{};
+  uint64_t outstanding_bytes{};
+  uint64_t consecutive_retransmissions_nums{};
+  bool _has_error = false;
 };
