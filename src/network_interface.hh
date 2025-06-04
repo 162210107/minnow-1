@@ -3,9 +3,11 @@
 #include "address.hh"
 #include "ethernet_frame.hh"
 #include "ipv4_datagram.hh"
+#include "parser.hh"
 
 #include <memory>
 #include <queue>
+#include <map>
 
 // A "network interface" that connects IP (the internet layer, or network layer)
 // with Ethernet (the network access layer, or link layer).
@@ -70,6 +72,8 @@ private:
   // Human-readable name of the interface
   std::string name_;
 
+  void send_arp_request(const uint32_t ip_to_find);
+
   // The physical output port (+ a helper function `transmit` that uses it to send an Ethernet frame)
   std::shared_ptr<OutputPort> port_;
   void transmit( const EthernetFrame& frame ) const { port_->transmit( *this, frame ); }
@@ -82,4 +86,20 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+
+  // datagrams not sent yet
+  std::queue<std::pair<InternetDatagram, Address>> datagrames_queue{};
+
+  // map + heap to achieve O(lgN) search,insert,expire check operation of IP-to-Ethernet mappings
+  typedef std::pair<time_t, uint32_t> PTU;
+  std::map<uint32_t, std::pair<EthernetAddress, time_t>> arp_table{};
+  std::priority_queue<PTU, std::vector<PTU>, std::greater<PTU>> _arp_failure_time{};
+
+  // < arp request sent and not get response yet, timestamp, ip to find>
+  std::tuple<bool, time_t, uint32_t> _arp_retransmission_timer{};
+
+  time_t _curr_time{};
+
+  //! \brief Access queue of Ethernet frames awaiting transmission
+  //std::queue<EthernetFrame> _frames_out{};
 };
